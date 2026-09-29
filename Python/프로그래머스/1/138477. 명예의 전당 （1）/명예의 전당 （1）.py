@@ -1,15 +1,16 @@
+import heapq
+
+
 def solution(k, score):
     answer = []
-    nums = []
-    
-    for i in range (len(score)):
-        if i < k:
-            nums.append(score[i])
-        else:
-            tmp = min(nums)
-            if tmp < score[i]:
-                n = nums.index(tmp)
-                nums[n] = score[i]
-        answer.append(min(nums))
-            
+    tmp = []
+
+    for i in score:
+        if len(tmp) < k:
+            heapq.heappush(tmp, i)
+        elif tmp[0] < i:
+            heapq.heappop(tmp)
+            heapq.heappush(tmp, i)
+        answer.append(tmp[0])
+
     return answer
