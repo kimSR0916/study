@@ -1,34 +1,37 @@
 from collections import deque
-
 def solution(queue1, queue2):
+    answer = 0
     q1 = deque(queue1)
     q2 = deque(queue2)
+    s1 = sum(q1)
+    s2 = sum(q2)
+    total = s1 + s2
     
-    sum1 = sum(q1)
-    sum2 = sum(q2)
-    total = sum1 + sum2
-    
-    # 전체 합이 홀수면 두 큐의 합을 같게 만들 수 없음
     if total % 2 != 0:
         return -1
-        
-    target = total // 2
-    limit = len(q1) * 4  # 최대 탐색 횟수 제한
-    count = 0
     
-    while count <= limit:
-        if sum1 == target:
-            return count
-        elif sum1 > target:
-            val = q1.popleft()
-            sum1 -= val
-            q2.append(val)
-            sum2 += val
+    total = total // 2
+    
+    #q1, q2 중에 더 큰 값 찾아서 큰 값에서 값 충족하는 수열 찾고 나머지 q1에 넣기
+    #찾는 과정 - 더해가며 찾다가 넘어가는 경우 leftindex 앞당기기    
+    
+    while True:
+        if s1 == total:
+            break
+        elif s1 > total:
+            tmp = q1.popleft()
+            q2.append(tmp)
+            answer += 1
+            s1 -= tmp
+            s2 += tmp
         else:
-            val = q2.popleft()
-            sum2 -= val
-            q1.append(val)
-            sum1 += val
-        count += 1
+            tmp = q2.popleft()
+            q1.append(tmp)
+            answer += 1
+            s1 += tmp
+            s2 -= tmp
         
-    return -1
+        if answer >= len(queue1) * 3:
+            return -1
+            
+    return answer
